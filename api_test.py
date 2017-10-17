@@ -32,7 +32,7 @@ def request_minion_info(fields_to_get, nodename, config):
 	}
 	print 'generated payload: ' + json.dumps(payload, indent=4) 
 	headers={'Accept': 'application/json'} 
-	auth = (config['admin'], config['pass'] )
+	auth = (config['user'], config['pass'] )
 	url = "%s/services/data/v1.0/query/" % config['host']
 	verify = False 
 	
@@ -58,7 +58,7 @@ def main():
 	
 	config = get_config('settings.yaml')
 	
-	query = generate_fields_to_get(fields_to_get) 
+	query = generate_fields_to_get(config['fields_to_get']) 
 	nodename = 'ubuntu.saltmaster5'
 	
 	response = request_minion_info(query, nodename, config) 

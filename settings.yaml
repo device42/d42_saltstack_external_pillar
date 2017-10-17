@@ -2,3 +2,11 @@
 host: https://10.42.2.241
 user: admin
 pass: adm!nd42
+fields_to_get:
+  - name
+  - os_name
+  - os_version
+  - service_level
+  - tags 
+# if you want all fields: 
+# fields_to_get: *
