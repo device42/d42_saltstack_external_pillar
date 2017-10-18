@@ -80,30 +80,13 @@ def generate_simple_query(fields, nodename):
 	return query 
 
 
-def generate_custom_fields_subquery(custom_fields): 
-	subqueries = ""
-	for c in custom_fields:
-		print 'key: ' + str(c.keys() ) 
-		print 'values: ' + str(c.values() )
-		custom_fieldname=c.keys()[0] 
-		alias = c.values()[0]
-		query = '(SELECT value FROM view_device_custom_fields_v1 WHERE device_fk = device_pk AND key = "{fieldname}" ) AS "{fieldname_alias}",'.format(fieldname=custom_fieldname, fieldname_alias=alias)
-		# print query 
-		subqueries += query
-	
-	return subqueries[:-1] # parse out final coma
-
 def main(): 
 	
 	config = get_config('settings.yaml')
-	# query = '*'
 	nodename = 'ubuntu.saltmaster5'
-	# query = generate_simple_query(config['fields_to_get']) 
 	
-	subqueries = generate_custom_fields_subquery(config['custom_fields_to_get']) 	
-	print 'subqueries: ' + subqueries 
 	if config['query'] != None:	
-		query = config['query'].format(nodename=nodename, subqueries=subqueries)
+		query = config['query'].format(nodename=nodename)
 	else: 
 		query = generate_simple_query(config['fields_to_get'], nodename) 
 

@@ -27,10 +27,13 @@ def _req(url, payload, auth, headers, verify=True):
     )
     return response
 
+def request_minion_info(query, config):
 
-def request_minion_info(fields_to_get, nodename, config):
     payload = {
-        "query": "SELECT %s FROM view_device_v1 WHERE name = '%s' order by device_pk" % (fields_to_get, nodename),
+        "query": query,
+        #"query": "SELECT %s FROM view_device_v1, view_device_custom_fields_v1 WHERE view_device_v1.name = '%s' AND view_device_v1.name=view_device_custom_fields_v1.device_name" % (fields_to_get, nodename), 
+        # original "query": "SELECT %s FROM view_device_v1 WHERE name = '%s'" % (fields_to_get, nodename),
+        # works "query": "SELECT %s FROM view_device_custom_fields_v1 WHERE device_name='%s' " % (fields_to_get, nodename),
         "header": "yes"
     }
     print 'generated payload: ' + json.dumps(payload, indent=4)
@@ -42,6 +45,24 @@ def request_minion_info(fields_to_get, nodename, config):
     response = _req(url, payload, auth, headers, verify)
 
     return response
+
+def generate_simple_query(fields, nodename):
+    selectors = ""
+    if len(fields) > 1:
+        for f in fields:
+            if isinstance(f, basestring):
+                print 'yes: ' + f
+                selectors += "%s," % f
+            else:
+                # throw exception for type error 
+                print 'no: ' + f
+        selectors = selectors[:-1] # remove coma which will trail this due to loop above    
+    else: # only 1 field in fields...
+        selectors += fields
+
+    # write the simple query 
+    query = " SELECT %s FROM view_device_v1 WHERE name = '%s' " % (selectors, nodename) # put selectors and nodename into simple query
+    return query
 
 def generate_fields_to_get(conf):
     query = ""
@@ -60,9 +81,12 @@ def ext_pillar(minion_id, pillar, arg0):
     
 	nodename = __grains__['nodename']
 	config = get_config('settings.yaml') 
-	query = generate_fields_to_get(config['fields_to_get'])
+	if config['query'] != None:
+		query = config['query'].format(nodename=nodename)
+	else:
+		query = generate_simple_query(config['fields_to_get'], nodename)
 	
-	response = request_minion_info(query, nodename, config)
+	response = request_minion_info(query, config)
     
 	
 	listrows = response.text.split('\n')
