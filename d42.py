@@ -82,8 +82,6 @@ def ext_pillar(minion_id, pillar, arg0):
 	
 	data = {
 		'minion_id': minion_id,
-		'test': 'out',
-		'masterconf_arg0': arg0,
 		'nodename': nodename,
 		'd42': out[0]
 	}
