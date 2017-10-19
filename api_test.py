@@ -82,7 +82,7 @@ def generate_simple_query(fields, nodename):
 
 def main(): 
 	
-	config = get_config('settings.yaml')
+	config = get_config('settings_d42.yaml')
 	nodename = 'ubuntu.saltmaster5'
 	
 	if config['query'] != None:	

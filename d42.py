@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import requests, csv, json, yaml, os 
+import logging 
 
+log = logging.getLogger(__name__) 
 '''
 WIP
 '''
@@ -31,9 +33,6 @@ def request_minion_info(query, config):
 
     payload = {
         "query": query,
-        #"query": "SELECT %s FROM view_device_v1, view_device_custom_fields_v1 WHERE view_device_v1.name = '%s' AND view_device_v1.name=view_device_custom_fields_v1.device_name" % (fields_to_get, nodename), 
-        # original "query": "SELECT %s FROM view_device_v1 WHERE name = '%s'" % (fields_to_get, nodename),
-        # works "query": "SELECT %s FROM view_device_custom_fields_v1 WHERE device_name='%s' " % (fields_to_get, nodename),
         "header": "yes"
     }
     print 'generated payload: ' + json.dumps(payload, indent=4)
@@ -78,25 +77,20 @@ def generate_fields_to_get(conf):
     return query[:-1]
 
 def ext_pillar(minion_id, pillar, arg0):
-    
+	log.info("running d42 ext_pillar") 
+ 
 	nodename = __grains__['nodename']
-	config = get_config('settings.yaml') 
+	config = get_config('settings_d42.yaml') 
 	if config['query'] != None:
 		query = config['query'].format(nodename=nodename)
 	else:
-		query = generate_simple_query(config['fields_to_get'], nodename)
+		query = generate_simple_query(config['default_fields_to_get'], nodename)
 	
-	response = request_minion_info(query, config)
-    
-	
+	response = request_minion_info(query, config)	
 	listrows = response.text.split('\n')
-    
 	fields = listrows[0].split(',')
-    
 	rows = csv.reader(listrows[1:])
-    
 	out = []
-
 	for row in rows:
 		items = zip(fields, row)
 		item = {}
@@ -109,4 +103,5 @@ def ext_pillar(minion_id, pillar, arg0):
 		'nodename': nodename,
 		'd42': out[0]
 	}
+	log.warning("out->  " + json.dumps(data, indent=4, sort_keys=True))  
 	return data

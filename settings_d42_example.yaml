@@ -1,0 +1,19 @@
+---
+host: https://192.168.0.1
+user: username
+pass: password
+
+# example query that gets a custom field as well 
+# query: SELECT os_name,os_version,service_level,tags, ( SELECT value FROM view_device_custom_fields_v1 WHERE device_fk = device_pk AND key = 'Salt Node ID') AS "salt_node_id" FROM view_device_v1 WHERE name = '{nodename}' 
+# it is a good idea to alias your custom fields to names with no spaces, so Salt Node ID should alias as Salt_Node_ID 
+
+# if query is empty, default_fields_to_get will be returned from view_device_v1 (the base table)
+query: 
+
+# very simple method to get fields ONLY from the main view_device_v1 table 
+default_fields_to_get:
+  - name
+  - os_name
+  - os_version
+  - service_level
+  - tags
