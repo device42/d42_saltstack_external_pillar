@@ -1,12 +1,29 @@
 #!/usr/bin/python
-import requests, csv, json, yaml, os 
+import csv, json, os 
 import logging 
 
-log = logging.getLogger(__name__) 
-'''
-WIP
-'''
+log = logging.getLogger(__name__)
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# check to ensure requests + yaml are available 
+try: 
+	import requests
+	REQUESTS_LOADED = True 
+except ImportError:
+	REQUESTS_LOADED = False 
+	log.exception('requests package is required') 
+try:
+	import yaml
+	YAML_LOADED = True 
+except ImportError:
+	YAML_LOADED = False 
+	log.exception('yaml package is required') 
+
+
+def __virtual__():
+	if REQUESTS_LOADED == True and YAML_LOADED == True:
+		return True 
+	return False
 
 def get_config(cfgpath):
     if not os.path.exists(cfgpath):
@@ -35,7 +52,7 @@ def request_minion_info(query, config):
         "query": query,
         "header": "yes"
     }
-    print 'generated payload: ' + json.dumps(payload, indent=4)
+    
     headers={'Accept': 'application/json'}
     auth = (config['user'], config['pass'] )
     url = "%s/services/data/v1.0/query/" % config['host']
@@ -46,22 +63,21 @@ def request_minion_info(query, config):
     return response
 
 def generate_simple_query(fields, nodename):
-    selectors = ""
-    if len(fields) > 1:
-        for f in fields:
-            if isinstance(f, basestring):
-                print 'yes: ' + f
-                selectors += "%s," % f
-            else:
-                # throw exception for type error 
-                print 'no: ' + f
-        selectors = selectors[:-1] # remove coma which will trail this due to loop above    
-    else: # only 1 field in fields...
-        selectors += fields
-
-    # write the simple query 
-    query = " SELECT %s FROM view_device_v1 WHERE name = '%s' " % (selectors, nodename) # put selectors and nodename into simple query
-    return query
+	selectors = ""
+	if len(fields) > 1:
+		for f in fields:
+			if isinstance(f, basestring):
+				print 'yes: ' + f
+				selectors += "%s," % f
+			else:
+				# throw exception for type error 
+				print 'no: ' + f
+		selectors = selectors[:-1] # remove coma which will trail this due to loop above    
+	else: # only 1 field in fields...
+		selectors += fields
+	# write the simple query 
+	query = " SELECT %s FROM view_device_v1 WHERE name = '%s' " % (selectors, nodename) # put selectors and nodename into simple query
+	return query
 
 def generate_fields_to_get(conf):
     query = ""

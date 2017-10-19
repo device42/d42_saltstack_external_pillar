@@ -61,7 +61,7 @@ ubuntu:
         ubuntu.saltmaster5
 ```
 
-Check out (D42 Blog)[device42.com/blog] for a post on this new integration shortly! 
+Check out [D42 Blog](device42.com/blog) for a post on this new integration shortly! 
 
 Please get in touch with any questions or help with designing your integration 
 
