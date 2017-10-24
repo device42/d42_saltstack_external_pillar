@@ -86,7 +86,7 @@ def main():
 	nodename = 'ubuntu.saltmaster5'
 	
 	if config['query'] != None:	
-		query = config['query'].format(nodename=nodename)
+		query = config['query'].format(minion_name=nodename)
 	else: 
 		query = generate_simple_query(config['fields_to_get'], nodename) 
 

@@ -6,10 +6,10 @@ A simple external pillar module for Salt that allows for importing Device42 fiel
 
 ## Why:
 By syncing data stored in your Device42 CMDB with their respective servers / minions as managed by Salt, all of your configuraiton information feeds into granular, actionable salt commands.  This information can be used to power any number of automations: 
-- provisioning a new server based on classifications in Device42.
-- remediating an issue with a proven workflow.
-- performing maitnence on all servers in a specific environment (Production, Staging, Development, etc)
-- gathering specific information about a server for use in ITSM ticketing software.  
+- Provisioning a new server based on classifications in Device42.
+- Remediating an issue with a proven workflow.
+- Performing maitnence on all servers in a specific environment (Production, Staging, Development, etc).
+- Gathering specific information about a server for use in ITSM ticketing software.  
 
 ## How: 
 The D42 Salt External Pillar will query D42 for a set of fields with respect to each of your salt minions configured to utilize it.  The set of fields from D42 can be configured based on raw DOQL queries or can be generically used to fetch fields from the main device table in D42.  

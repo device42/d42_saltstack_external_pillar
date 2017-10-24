@@ -98,7 +98,7 @@ def ext_pillar(minion_id, pillar, arg0):
 	nodename = __grains__['nodename']
 	config = get_config('settings_d42.yaml') 
 	if config['query'] != None:
-		query = config['query'].format(nodename=nodename)
+		query = config['query'].format(minion_name=nodename)
 	else:
 		query = generate_simple_query(config['default_fields_to_get'], nodename)
 	
@@ -116,7 +116,6 @@ def ext_pillar(minion_id, pillar, arg0):
 	
 	data = {
 		'minion_id': minion_id,
-		'nodename': nodename,
 		'd42': out[0]
 	}
 	log.warning("out->  " + json.dumps(data, indent=4, sort_keys=True))  
