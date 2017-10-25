@@ -2,6 +2,8 @@
 import csv, json, os 
 import logging 
 
+# This is the main external pillar script
+
 log = logging.getLogger(__name__)
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 

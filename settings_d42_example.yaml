@@ -7,6 +7,13 @@ pass: password
 # query: SELECT os_name,os_version,service_level,tags, ( SELECT value FROM view_device_custom_fields_v1 WHERE device_fk = device_pk AND key = 'Salt Node ID') AS "salt_node_id" FROM view_device_v1 WHERE name = '{nodename}' 
 # it is a good idea to alias your custom fields to names with no spaces, so Salt Node ID should alias as Salt_Node_ID 
 
+#--------
+
+# example query that gets a custom field, IP address, and IP type 
+# query: SELECT os_name,os_version,service_level,tags, ( SELECT value FROM view_device_custom_fields_v1 WHERE device_fk = device_pk AND key = 'Salt Node ID') AS "salt_node_id", ( SELECT ip_address FROM view_ipaddress_v1 WHERE device_fk = device_pk ) AS "ip_address", ( SELECT type FROM view_ipaddress_v1 WHERE device_fk = device_pk ) AS "ip_type"  FROM view_device_v1 WHERE name = '{minion_name}'
+
+# --------
+
 # if query is empty, default_fields_to_get will be returned from view_device_v1 (the base table)
 query: 
 

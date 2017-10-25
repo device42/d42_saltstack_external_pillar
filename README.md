@@ -14,6 +14,8 @@ By syncing data stored in your Device42 CMDB with their respective servers / min
 ## How: 
 The D42 Salt External Pillar will query D42 for a set of fields with respect to each of your salt minions configured to utilize it.  The set of fields from D42 can be configured based on raw DOQL queries or can be generically used to fetch fields from the main device table in D42.  
 
+[You can learn more about this integration and read about some use cases on the Device42 blog](https://www.device42.com/blog/2017/10/using-device42-with-salt-external-pillar/)
+
 ## Installation
 
 Edit `/etc/salt/master` on your Salt Master so that it knows to look for the d42 external pillars module
@@ -61,7 +63,6 @@ ubuntu:
         ubuntu.saltmaster5
 ```
 
-Check out [D42 Blog](device42.com/blog) for a post on this new integration shortly! 
 
 Please get in touch with any questions or help with designing your integration 
 

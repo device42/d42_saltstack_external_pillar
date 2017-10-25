@@ -1,5 +1,5 @@
 import requests, csv, json, yaml, os
-
+# api_test.py is to help you test doql queries without the full external pillar script
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
