@@ -38,6 +38,10 @@ def get_config(cfgpath):
 
 def _req(url, payload, auth, headers, verify=True):
 
+    log.debug("_req url-> "+url)
+    log.debug("_req payload-> "+str(payload))
+    log.debug("_req headers-> "+str(headers))
+    log.debug("_req verify-> "+str(verify))
     response = requests.request(
         "POST",
         url,
@@ -46,6 +50,8 @@ def _req(url, payload, auth, headers, verify=True):
         headers=headers,
         verify=verify
     )
+    log.debug("_req response.status_code-> "+str(response.status_code))
+    log.debug("_req response.text-> "+response.text)
     return response
 
 def request_minion_info(query, config):
