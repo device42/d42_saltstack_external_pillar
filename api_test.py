@@ -122,4 +122,5 @@ def main():
 	else:
 		return None
 
-obj = main()
+if __name__ == "__main__":
+    main()
