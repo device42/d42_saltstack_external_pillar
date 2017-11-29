@@ -105,18 +105,21 @@ def main():
 	print '\n\n query: %s \n\n ' % (query)
 	
 	response = request_minion_info(query, config) 
-	
-	listrows = response.text.split('\n')
-	fields = listrows[0].split(',')
-	rows = csv.reader(listrows[1:])
-	out = []
-	for row in rows:
-		items = zip(fields, row)
-		item = {}
-		for (name, value) in items:
-			item[name] = value.strip()
-		out.append(item)
-	print "output: " + json.dumps(out[0], indent=4, sort_keys=True) 
-	return out 
+
+	if response:	
+		listrows = response.text.split('\n')
+		fields = listrows[0].split(',')
+		rows = csv.reader(listrows[1:])
+		out = []
+		for row in rows:
+			items = zip(fields, row)
+			item = {}
+			for (name, value) in items:
+				item[name] = value.strip()
+			out.append(item)
+		print "output: " + json.dumps(out[0], indent=4, sort_keys=True)
+		return out 
+	else:
+		return None
 
 obj = main()
