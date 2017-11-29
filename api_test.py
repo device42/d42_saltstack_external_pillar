@@ -57,10 +57,10 @@ def request_minion_info(query, config):
 	headers={'Accept': 'application/json'} 
 	auth = (config['user'], config['pass'] )
 	url = "%s/services/data/v1.0/query/" % config['host']
-	verify = False
+	sslverify = config['sslverify']
 
 	try:	
-		response = _req(url, payload, auth, headers, verify)
+		response = _req(url, payload, auth, headers, sslverify)
 	except Exception as e:
 		print "D42 Error: {0}".format(str(e))
 		return None
