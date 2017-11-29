@@ -22,6 +22,9 @@ def _req(url, payload, auth, headers, verify=True):
 		headers=headers,
 		verify=verify
 	)
+	if response.status_code >= 400:
+		print 'D42 Response text: {0}'.format(response.text)
+	response.raise_for_status()
 	return response 
 '''
 this is what is returned from the view_device_custom_fields_v1 table 
@@ -54,9 +57,13 @@ def request_minion_info(query, config):
 	headers={'Accept': 'application/json'} 
 	auth = (config['user'], config['pass'] )
 	url = "%s/services/data/v1.0/query/" % config['host']
-	verify = False 
-	
-	response = _req(url, payload, auth, headers, verify) 
+	verify = False
+
+	try:	
+		response = _req(url, payload, auth, headers, verify)
+	except Exception as e:
+		print "D42 Error: {0}".format(str(e))
+		return None
 	
 	return response 
  
