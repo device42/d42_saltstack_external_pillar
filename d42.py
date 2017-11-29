@@ -52,6 +52,7 @@ def _req(url, payload, auth, headers, verify=True):
     )
     log.debug("_req response.status_code-> "+str(response.status_code))
     log.debug("_req response.text-> "+response.text)
+    response.raise_for_status()
     return response
 
 def request_minion_info(query, config):
@@ -66,7 +67,11 @@ def request_minion_info(query, config):
     url = "%s/services/data/v1.0/query/" % config['host']
     verify = False
 
-    response = _req(url, payload, auth, headers, verify)
+    try:
+        response = _req(url, payload, auth, headers, verify)
+    except Exception as e:
+        log.warning('D42 Error: {0}'.format( str(e) ) )
+        return None
 
     return response
 
@@ -111,20 +116,24 @@ def ext_pillar(minion_id, pillar, arg0):
 		query = generate_simple_query(config['default_fields_to_get'], nodename)
 	
 	response = request_minion_info(query, config)	
-	listrows = response.text.split('\n')
-	fields = listrows[0].split(',')
-	rows = csv.reader(listrows[1:])
-	out = []
-	for row in rows:
-		items = zip(fields, row)
-		item = {}
-		for (name, value) in items:
-			item[name] = value.strip()
-		out.append(item)
+	if response:
+		listrows = response.text.split('\n')
+		fields = listrows[0].split(',')
+		rows = csv.reader(listrows[1:])
+		out = []
+		for row in rows:
+			items = zip(fields, row)
+			item = {}
+			for (name, value) in items:
+				item[name] = value.strip()
+			out.append(item)
 	
-	data = {
-		'minion_id': minion_id,
-		'd42': out[0]
-	}
-	log.warning("out->  " + json.dumps(data, indent=4, sort_keys=True))  
-	return data
+		data = {
+			'minion_id': minion_id,
+			'd42': out[0]
+		}
+		log.debug("out->  " + json.dumps(data, indent=4, sort_keys=True))
+	
+		return data
+	else:
+		return None
