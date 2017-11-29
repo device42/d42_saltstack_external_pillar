@@ -1,4 +1,4 @@
-import requests, csv, json, yaml, os
+import requests, csv, json, yaml, os, sys
 # api_test.py is to help you test doql queries without the full external pillar script
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -83,7 +83,12 @@ def generate_simple_query(fields, nodename):
 def main(): 
 	
 	config = get_config('settings_d42.yaml')
-	nodename = 'ubuntu.saltmaster5'
+	if len(sys.argv) < 2:
+		print 'Error: Missing hostname to test query'
+		print 'Usage: {0} <hostname>'.format(sys.argv[0])
+		return None
+	else:
+		nodename = sys.argv[1]
 	
 	if config['query'] != None:	
 		query = config['query'].format(minion_name=nodename)
