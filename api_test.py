@@ -100,7 +100,7 @@ def main():
 	if config['query'] != None:	
 		query = config['query'].format(minion_name=nodename)
 	else: 
-		query = generate_simple_query(config['fields_to_get'], nodename) 
+		query = generate_simple_query(config['default_fields_to_get'], nodename)
 
 	print '\n\n query: %s \n\n ' % (query)
 	
