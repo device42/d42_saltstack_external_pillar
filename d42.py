@@ -52,6 +52,8 @@ def _req(url, payload, auth, headers, verify=True):
     )
     log.debug("_req response.status_code-> "+str(response.status_code))
     log.debug("_req response.text-> "+response.text)
+    if response.status_code >= 400:
+        log.warning('_req D42 Response text: {0}'.format(response.text))
     response.raise_for_status()
     return response
 
